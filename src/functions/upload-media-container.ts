@@ -5,9 +5,10 @@ import connectToDb from "../config/db";
 import IGPageModel from "../model/IGPage";
 import { ENV } from "../constants";
 import SecretModel from "../model/Secret.model";
-import { decrypt } from "../helpers/decrypt";
+import { decrypt, decryptAll } from "../helpers/decrypt";
 
 module.exports.handler = async (event: any, context: any) => {
+  console.log("uploadMediaContainer");
   try {
     console.log("ENV", ENV);
 
@@ -22,10 +23,9 @@ module.exports.handler = async (event: any, context: any) => {
     }
 
     await connectToDb();
-    console.log("uploadMediaContainer");
 
     // Check if page is valid
-    const validPage = await IGPageModel.findOne({ name: page });
+    const validPage = await IGPageModel.findOne({ name: page }).lean();
 
     if (!validPage) {
       return {
@@ -35,7 +35,7 @@ module.exports.handler = async (event: any, context: any) => {
     }
 
     // Get Secrets for the page
-    const pageSecrets = await SecretModel.findOne({ page });
+    const pageSecrets = await SecretModel.findOne({ page }).lean();
 
     if (!pageSecrets) {
       return {
@@ -43,7 +43,10 @@ module.exports.handler = async (event: any, context: any) => {
         body: JSON.stringify({ message: "Secrets Not Found for" + page }),
       };
     }
-    const ig_user_id = pageSecrets.ig_user_id;
+
+    const decryptedSecrets = decryptAll(pageSecrets);
+
+    const ig_user_id = decryptedSecrets.ig_user_id;
 
     // Get Current Month
     const currentDate = new Date();

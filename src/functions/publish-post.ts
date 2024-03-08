@@ -5,6 +5,7 @@ import { publishMedia } from "../helpers/publishMedia";
 import connectToDb from "../config/db";
 import IGPageModel from "../model/IGPage";
 import SecretModel from "../model/Secret.model";
+import { decryptAll } from "../helpers/decrypt";
 
 module.exports.handler = async (event: any, context: any) => {
   try {
@@ -26,7 +27,7 @@ module.exports.handler = async (event: any, context: any) => {
     }
 
     // Get Secrets for the page
-    const pageSecrets = await SecretModel.findOne({ page });
+    const pageSecrets = await SecretModel.findOne({ page }).lean();
 
     if (!pageSecrets) {
       return {
@@ -34,7 +35,10 @@ module.exports.handler = async (event: any, context: any) => {
         body: JSON.stringify({ message: "Secrets Not Found for" + page }),
       };
     }
-    const ig_user_id = pageSecrets.ig_user_id as string;
+
+    const decryptedSecrets = decryptAll(pageSecrets);
+
+    const ig_user_id = decryptedSecrets.ig_user_id;
 
     const currentDate = new Date();
     const currentMonth = ENV.months[currentDate.getMonth()];
@@ -54,7 +58,7 @@ module.exports.handler = async (event: any, context: any) => {
     const creation_id = currentPost.creation_id as string;
 
     console.log("creation_id", creation_id);
-    console.log("currentPost._id", Number(currentPost._id));
+    console.log("currentPost._id", String(currentPost._id));
 
     // Publish Media, save published_id, update published status to Y in CSV
     const published_id = await publishMedia({

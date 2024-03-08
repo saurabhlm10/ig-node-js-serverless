@@ -34,6 +34,10 @@ export const publishMedia = async ({
       const publishResponse = await axios.post(publishVideoUri);
       console.log("publishedid", publishResponse.data.id);
       return publishResponse.data.id;
+    } else {
+      throw new Error(
+        "Failed to publish media because it is taking too long to process"
+      );
     }
   } catch (error) {
     if (error instanceof AxiosError) {

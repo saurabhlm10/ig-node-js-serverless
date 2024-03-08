@@ -1,0 +1,21 @@
+org: saurabhlm10
+app: ig-node-js
+service: ig-node-js-serverless
+frameworkVersion: "3"
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-plugin-typescript
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-south-1
+
+functions:
+  uploadMediaContainer:
+    handler: src/functions/upload-media-container.handler
+    events:
+      - httpApi:
+          path: /uploadMediaContainer/{page}
+          method: get

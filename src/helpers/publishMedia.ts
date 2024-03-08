@@ -6,16 +6,15 @@ import { ENV } from "../constants";
 export const publishMedia = async ({
   creation_id,
   currentPostId,
-  page,
+  ig_user_id,
 }: {
   creation_id: string;
   currentPostId: string;
-  page: string;
+  ig_user_id: string;
 }) => {
   console.log("publishMedia");
   console.log("currentPostId", currentPostId);
   const access_token = ENV.access_token;
-  const ig_user_id = process.env[`${page.toUpperCase()}_IG_USER_ID`];
 
   try {
     const checkStatusUri = `https://graph.facebook.com/v17.0/${creation_id}?fields=status,status_code&access_token=${access_token}`;

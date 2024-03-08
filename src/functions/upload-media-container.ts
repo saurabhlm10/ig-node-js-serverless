@@ -4,12 +4,12 @@ import Post from "../model/Post";
 import connectToDb from "../config/db";
 import IGPageModel from "../model/IGPage";
 import { ENV } from "../constants";
+import SecretModel from "../model/Secret.model";
+import { decrypt } from "../helpers/decrypt";
 
 module.exports.handler = async (event: any, context: any) => {
   try {
     console.log("ENV", ENV);
-    await connectToDb();
-    console.log("uploadMediaContainer");
 
     const page = event.pathParameters?.page;
     console.log("page", page);
@@ -21,10 +21,11 @@ module.exports.handler = async (event: any, context: any) => {
       };
     }
 
+    await connectToDb();
+    console.log("uploadMediaContainer");
+
     // Check if page is valid
     const validPage = await IGPageModel.findOne({ name: page });
-
-    console.log(validPage, "validPage");
 
     if (!validPage) {
       return {
@@ -32,6 +33,17 @@ module.exports.handler = async (event: any, context: any) => {
         body: JSON.stringify({ message: "Page Not Found" }),
       };
     }
+
+    // Get Secrets for the page
+    const pageSecrets = await SecretModel.findOne({ page });
+
+    if (!pageSecrets) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ message: "Secrets Not Found for" + page }),
+      };
+    }
+    const ig_user_id = pageSecrets.ig_user_id;
 
     // Get Current Month
     const currentDate = new Date();
@@ -62,7 +74,7 @@ module.exports.handler = async (event: any, context: any) => {
       mediaToUpload,
       currentPost.cover_url,
       currentPost.caption,
-      page as string
+      ig_user_id as string
       // currentPost.ownerUsername
     );
 

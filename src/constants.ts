@@ -1,5 +1,8 @@
 import { getDaysInCurrentMonth } from "./helpers/getDaysInCurrentMonth";
 
+// Crypto Secret
+const cryptoSecret = process.env.CRYPTO_SECRET as string;
+
 // Server
 const PORT = process.env.PORT || 4000;
 
@@ -59,4 +62,5 @@ export const ENV = {
   cloudinary_cloud_name,
   cloudinary_api_key,
   cloudinary_api_secret,
+  cryptoSecret,
 };

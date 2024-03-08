@@ -15,17 +15,13 @@ export const uploadMedia = async (
   media_url: string,
   cover_url: string,
   caption: string,
-  page: string
+  ig_user_id: string
   // ownerUsername: string
 ) => {
   console.log("uploadMedia");
 
   try {
-    console.log("beginn");
     const access_token = ENV.access_token;
-
-    console.log(`${page.toUpperCase()}_IG_USER_ID`);
-    const ig_user_id = process.env[`${page.toUpperCase()}_IG_USER_ID`];
 
     console.log("ig_user_id", ig_user_id);
 

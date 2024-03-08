@@ -11,6 +11,7 @@ provider:
   name: aws
   runtime: nodejs18.x
   region: ap-south-1
+  timeout: 900
 
 functions:
   uploadMediaContainer:

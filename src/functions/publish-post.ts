@@ -4,6 +4,7 @@ import Post from "../model/Post";
 import { publishMedia } from "../helpers/publishMedia";
 import connectToDb from "../config/db";
 import IGPageModel from "../model/IGPage";
+import SecretModel from "../model/Secret.model";
 
 module.exports.handler = async (event: any, context: any) => {
   try {
@@ -17,14 +18,23 @@ module.exports.handler = async (event: any, context: any) => {
     // Check if page is valid
     const validPage = await IGPageModel.findOne({ name: page });
 
-    console.log(validPage, "validPage");
-
     if (!validPage) {
       return {
         statusCode: 404,
         body: JSON.stringify({ message: "Page Not Found" }),
       };
     }
+
+    // Get Secrets for the page
+    const pageSecrets = await SecretModel.findOne({ page });
+
+    if (!pageSecrets) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ message: "Secrets Not Found for" + page }),
+      };
+    }
+    const ig_user_id = pageSecrets.ig_user_id as string;
 
     const currentDate = new Date();
     const currentMonth = ENV.months[currentDate.getMonth()];
@@ -50,7 +60,7 @@ module.exports.handler = async (event: any, context: any) => {
     const published_id = await publishMedia({
       creation_id,
       currentPostId: String(currentPost._id),
-      page: page as string,
+      ig_user_id,
     });
 
     console.log("4");

@@ -19,3 +19,9 @@ functions:
       - httpApi:
           path: /uploadMediaContainer/{page}
           method: get
+  publishPost:
+    handler: src/functions/publish-post.handler
+    events:
+      - httpApi:
+          path: /publishPost/{page}
+          method: get

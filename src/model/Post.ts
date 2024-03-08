@@ -50,6 +50,9 @@ const postSchema = new mongoose.Schema(
       ],
       default: "uploaded-to-cloud",
     },
+    errorMessage: {
+      type: String,
+    },
     creation_id: {
       type: String,
     },

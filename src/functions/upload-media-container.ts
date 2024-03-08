@@ -6,9 +6,11 @@ import IGPageModel from "../model/IGPage";
 import { ENV } from "../constants";
 import SecretModel from "../model/Secret.model";
 import { decrypt, decryptAll } from "../helpers/decrypt";
+import { saveErrorToDB } from "../helpers/saveErrorToDB";
 
 module.exports.handler = async (event: any, context: any) => {
   console.log("uploadMediaContainer");
+  let currentPost;
   try {
     console.log("ENV", ENV);
 
@@ -53,7 +55,7 @@ module.exports.handler = async (event: any, context: any) => {
     const currentMonth = ENV.months[currentDate.getMonth()];
 
     // Find one post to upload from current month
-    const currentPost = await Post.findOne({
+    currentPost = await Post.findOne({
       status: "uploaded-to-cloud",
       publishMonth: currentMonth,
       page,
@@ -106,6 +108,12 @@ module.exports.handler = async (event: any, context: any) => {
 
     if (error instanceof AxiosError) {
       console.log(error.response?.data);
+      if (currentPost) {
+        await saveErrorToDB(
+          String(currentPost._id),
+          JSON.stringify(error.response?.data)
+        );
+      }
 
       return {
         statusCode: 400,
@@ -116,6 +124,12 @@ module.exports.handler = async (event: any, context: any) => {
     }
     if (error instanceof Error) {
       console.log(error);
+      if (currentPost) {
+        await saveErrorToDB(
+          String(currentPost._id),
+          JSON.stringify(error.message)
+        );
+      }
       return {
         statusCode: 400,
         body: {

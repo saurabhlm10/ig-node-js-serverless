@@ -7,6 +7,7 @@ import { ENV } from "../constants";
 import SecretModel from "../model/Secret.model";
 import { decrypt, decryptAll } from "../helpers/decrypt";
 import { saveErrorToDB } from "../helpers/saveErrorToDB";
+import mongoose from "mongoose";
 
 module.exports.handler = async (event: any, context: any) => {
   console.log("uploadMediaContainer");
@@ -79,7 +80,8 @@ module.exports.handler = async (event: any, context: any) => {
       mediaToUpload,
       currentPost.cover_url,
       currentPost.caption,
-      ig_user_id as string
+      ig_user_id as string,
+      page
       // currentPost.ownerUsername
     );
 
@@ -137,5 +139,7 @@ module.exports.handler = async (event: any, context: any) => {
         }),
       };
     }
+  } finally {
+    await mongoose.disconnect();
   }
 };

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { AxiosError } from "axios";
 import { ENV } from "../constants";
+import { getAccessTokenForPage } from "./getAccessTokenForPage";
 
 function removeHashtags(text: string) {
   return text.replace(/#[^\s#]+/g, "").trim();
@@ -15,13 +16,14 @@ export const uploadMedia = async (
   media_url: string,
   cover_url: string,
   caption: string,
-  ig_user_id: string
+  ig_user_id: string,
+  page: string
   // ownerUsername: string
 ) => {
   console.log("uploadMedia");
 
   try {
-    const access_token = ENV.access_token;
+    const access_token = getAccessTokenForPage(page);
 
     console.log("ig_user_id", ig_user_id);
 

@@ -2,21 +2,24 @@ import axios from "axios";
 import { AxiosError } from "axios";
 import { isUploadSuccessful } from "../utils/isUploadSuccessful";
 import { ENV } from "../constants";
+import { getAccessTokenForPage } from "./getAccessTokenForPage";
 
 export const publishMedia = async ({
   creation_id,
   currentPostId,
   ig_user_id,
+  page,
 }: {
   creation_id: string;
   currentPostId: string;
   ig_user_id: string;
+  page: string;
 }) => {
   console.log("publishMedia");
   console.log("currentPostId", currentPostId);
-  const access_token = ENV.access_token;
 
   try {
+    const access_token = getAccessTokenForPage(page);
     const checkStatusUri = `https://graph.facebook.com/v17.0/${creation_id}?fields=status,status_code&access_token=${access_token}`;
     const isUploaded = await isUploadSuccessful(
       0,

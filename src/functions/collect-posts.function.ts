@@ -9,6 +9,9 @@ import { getFilteredReels } from "../helpers/getFilteredReels";
 import { uploadReelToDB } from "../helpers/uploadReelToDB";
 import connectToDb from "../config/db";
 import IGPageModel from "../model/IGPage";
+import SecretModel from "../model/Secret.model";
+import { decryptAll } from "../helpers/decrypt";
+import mongoose from "mongoose";
 
 // Initialize the Lambda client
 const lambda = new Lambda({ region: "ap-south-1" });
@@ -87,8 +90,26 @@ module.exports.handler = async (event: any) => {
 
     console.log("usernames", usernames);
 
+    console.log("getting secrets or page");
+
+    // Get Secrets for the page
+    const pageSecrets = await SecretModel.findOne({ page }).lean();
+
+    console.log(pageSecrets);
+
+    if (!pageSecrets) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ message: "Secrets Not Found for" + page }),
+      };
+    }
+
+    const decryptedSecrets = decryptAll(pageSecrets);
+
+    const apify_key = decryptedSecrets.encrypted_apify_key;
+
     // Get Reels from Apify
-    const reels = await getReelsFromApify(usernames);
+    const reels = await getReelsFromApify(usernames, apify_key);
 
     console.log("Reels from Apify length", reels.length);
 
@@ -143,5 +164,7 @@ module.exports.handler = async (event: any) => {
       console.log("An unexpected error occurred", error);
       return { message: error.message };
     }
+  } finally {
+    await mongoose.disconnect();
   }
 };

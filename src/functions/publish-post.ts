@@ -7,6 +7,7 @@ import IGPageModel from "../model/IGPage";
 import SecretModel from "../model/Secret.model";
 import { decryptAll } from "../helpers/decrypt";
 import { saveErrorToDB } from "../helpers/saveErrorToDB";
+import mongoose from "mongoose";
 
 module.exports.handler = async (event: any, context: any) => {
   let currentPost;
@@ -67,6 +68,7 @@ module.exports.handler = async (event: any, context: any) => {
       creation_id,
       currentPostId: String(currentPost._id),
       ig_user_id,
+      page,
     });
 
     console.log("4");
@@ -114,5 +116,7 @@ module.exports.handler = async (event: any, context: any) => {
         }),
       };
     }
+  } finally {
+    await mongoose.disconnect();
   }
 };

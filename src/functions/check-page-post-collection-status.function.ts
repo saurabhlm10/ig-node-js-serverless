@@ -3,6 +3,7 @@ import connectToDb from "../config/db";
 import { getCurrentMonthYearName } from "../helpers/getCurrentMonthYearName";
 import IGPageModel from "../model/IGPage";
 import { fetchRedis } from "../helpers/fetchRedis";
+import mongoose from "mongoose";
 
 module.exports.handler = async (event: any) => {
   await connectToDb();
@@ -43,5 +44,7 @@ module.exports.handler = async (event: any) => {
         message: error.message,
       };
     }
+  } finally {
+    await mongoose.disconnect();
   }
 };

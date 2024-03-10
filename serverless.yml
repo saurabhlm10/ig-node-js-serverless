@@ -13,6 +13,11 @@ provider:
   region: ap-south-1
   timeout: 900
   stage: ${opt:stage, 'dev'}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+      Resource: "*"
 
 custom:
   dotenv:

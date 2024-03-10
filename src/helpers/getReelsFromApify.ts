@@ -1,12 +1,14 @@
 import { ApifyClient } from "apify-client";
 import { ENV } from "../constants";
 
-// Initialize the ApifyClient with API token
-const client = new ApifyClient({
-  token: ENV.APIFY_KEY,
-});
-
-export const getReelsFromApify = async (usernames: string[]) => {
+export const getReelsFromApify = async (
+  usernames: string[],
+  apify_key: string
+) => {
+  // Initialize the ApifyClient with API token
+  const client = new ApifyClient({
+    token: apify_key,
+  });
   console.log("getting reels from apify");
 
   // Prepare Actor input

@@ -1,13 +1,13 @@
 import { ApifyClient } from "apify-client";
 import process from "process";
 import { ENV } from "../constants";
-
-// Initialize the ApifyClient with API token
-const client = new ApifyClient({
-  token: ENV.APIFY_KEY,
-});
+import { axiosInstance } from "../config/axios";
 
 export const getPageInfo = async (pageUsernames: string[]) => {
+  // Initialize the ApifyClient with API token
+  const client = new ApifyClient({
+    token: "",
+  });
   // Prepare Actor input
   console.log("Getting Pages From Apify");
   const input = {

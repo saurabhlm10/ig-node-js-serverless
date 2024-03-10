@@ -1,13 +1,15 @@
 import { getDaysInCurrentMonth } from "./helpers/getDaysInCurrentMonth";
 
+const env = process.env.NODE_ENV;
 // Crypto Secret
 const cryptoSecret = process.env.CRYPTO_SECRET as string;
 
 // Server
 const PORT = process.env.PORT || 4000;
 
+const mainBackendUrl = process.env.MAIN_BACKEND_URL;
+
 // Apify
-const APIFY_KEY = process.env.APIFY_KEY;
 const apifyPerUsernameResultLimit = Number(
   process.env.APIFY_PER_USERNAME_RESULT_LIMIT
 );
@@ -33,15 +35,11 @@ const months = [
 
 const postsPerDay = Number(process.env.POSTS_PER_DAY as string);
 const daysInCurrentMonth = getDaysInCurrentMonth();
-//  const postsPerMonth = 2;
-const postsPerMonth = postsPerDay * daysInCurrentMonth;
+const postsPerMonth = env === "dev" ? 2 : postsPerDay * daysInCurrentMonth;
 
 // Upstash Redis
 const upstashRedisRESTUrl = process.env.UPSTASH_REDIS_REST_URL;
 const upstashRedisauthToken = process.env.UPSTASH_REDIS_REST_TOKEN;
-
-// FB
-const access_token = process.env.ACCESS_TOKEN;
 
 // Cloudinary
 const cloudinary_cloud_name = process.env.CLOUDINARY_CLOUD_NAME;
@@ -51,16 +49,15 @@ const cloudinary_api_secret = process.env.CLOUDINARY_API_SECRET;
 export const ENV = {
   PORT,
   MONGO_URL,
-  APIFY_KEY,
   apifyPerUsernameResultLimit,
   months,
   postsPerMonth,
   limit,
   upstashRedisRESTUrl,
   upstashRedisauthToken,
-  access_token,
   cloudinary_cloud_name,
   cloudinary_api_key,
   cloudinary_api_secret,
   cryptoSecret,
+  mainBackendUrl,
 };

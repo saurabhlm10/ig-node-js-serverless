@@ -66,9 +66,9 @@ module.exports.handler = async (event: any, context: any) => {
     if (!currentPost) {
       return {
         statusCode: 400,
-        body: {
+        body: JSON.stringify({
           message: "No Posts To Be Uploaded",
-        },
+        }),
       };
     }
 
@@ -117,9 +117,9 @@ module.exports.handler = async (event: any, context: any) => {
 
       return {
         statusCode: 400,
-        body: {
+        body: JSON.stringify({
           errorMessage: error.response?.data,
-        },
+        }),
       };
     }
     if (error instanceof Error) {
@@ -132,9 +132,9 @@ module.exports.handler = async (event: any, context: any) => {
       }
       return {
         statusCode: 400,
-        body: {
+        body: JSON.stringify({
           errorMessage: error.message,
-        },
+        }),
       };
     }
   }

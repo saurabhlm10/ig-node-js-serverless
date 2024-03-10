@@ -12,6 +12,11 @@ provider:
   runtime: nodejs18.x
   region: ap-south-1
   timeout: 900
+  stage: ${opt:stage, 'dev'}
+
+custom:
+  dotenv:
+    path: ./.env.${self:provider.stage}
 
 functions:
   uploadMediaContainer:
@@ -25,4 +30,16 @@ functions:
     events:
       - httpApi:
           path: /publishPost/{page}
+          method: get
+  collectPosts:
+    handler: src/functions/collect-posts.function.handler
+    events:
+      - httpApi:
+          path: /collectPosts/{page}
+          method: get
+  checkPagePostCollectionStatus:
+    handler: src/functions/check-page-post-collection-status.function.handler
+    events:
+      - httpApi:
+          path: /checkPagePostCollectionStatus/{page}
           method: get

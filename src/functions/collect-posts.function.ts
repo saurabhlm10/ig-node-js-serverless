@@ -12,6 +12,7 @@ import IGPageModel from "../model/IGPage";
 import SecretModel from "../model/Secret.model";
 import { decryptAll } from "../helpers/decrypt";
 import mongoose from "mongoose";
+import { getPagePostsPerMonth } from "../helpers/getPagePostsPerMonth";
 
 // Initialize the Lambda client
 const lambda = new Lambda({ region: "ap-south-1" });
@@ -45,7 +46,10 @@ module.exports.handler = async (event: any) => {
 
   try {
     // Check if page exists in DB
-    const pageExists = await IGPageModel.exists({ name: page });
+    const pageExists = await IGPageModel.findOne({ name: page });
+
+    const postsPerMonth =
+      ENV.env === "dev" ? 2 : getPagePostsPerMonth(Number(pageExists?.stage));
 
     if (!pageExists) {
       console.log("Page does not exist in DB");
@@ -66,10 +70,10 @@ module.exports.handler = async (event: any) => {
       redisEntry.pageOffset = rawResponse.pageOffset;
     }
 
-    console.log("Number Of Posts To Collect", ENV.postsPerMonth);
+    console.log("Number Of Posts To Collect", postsPerMonth);
 
     // If Posts are collected successfully
-    if (redisEntry.postOffset >= ENV.postsPerMonth) {
+    if (redisEntry.postOffset >= postsPerMonth) {
       redisEntry.status = StatusValues.SUCCESS;
       redisEntry.statusMessage = "Collected Posts Successfully for " + redisKey;
       await fetchRedis("set", redisKey, JSON.stringify(redisEntry));

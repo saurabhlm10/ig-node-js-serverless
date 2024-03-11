@@ -21,6 +21,9 @@ module.exports.handler = async (event: any) => {
   await connectToDb();
 
   const page = event.pathParameters?.page || event.page;
+  const usePreviousMonth = event?.queryStringParameters?.usePreviousMonth
+    ? true
+    : false;
   // const page = "frenchiesforthewin";
   console.log("CURRENT PAGE", page);
 
@@ -118,12 +121,16 @@ module.exports.handler = async (event: any) => {
     console.log("Reels from Apify length", reels.length);
 
     // Filter out the reels by the criteria
-    const filteredReels = await getFilteredReels(reels, usernames);
+    const filteredReels = await getFilteredReels(
+      reels,
+      usernames,
+      usePreviousMonth
+    );
 
     console.log("Uploading reels to DB");
 
-    await filteredReels.forEach(
-      async (reel: InstagramPost) => await uploadReelToDB(reel, page)
+    await Promise.all(
+      filteredReels.map((reel: InstagramPost) => uploadReelToDB(reel, page))
     );
 
     redisEntry.postOffset = redisEntry.postOffset + filteredReels.length;

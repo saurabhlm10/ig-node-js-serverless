@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-const getFilteredReelsByMonth = (reels: any) => {
+const getFilteredReelsByMonth = (reels: any, usePreviousMonth: boolean) => {
   console.log("reels before filtered by month", reels.length);
 
   const currentDate = new Date();
@@ -14,8 +14,9 @@ const getFilteredReelsByMonth = (reels: any) => {
 
     console.log("reelDate.getMonth()", reelDate.getMonth());
 
-    return reelDate.getMonth() === currentMonth - 1;
-    // return reelDate.getMonth() === currentMonth;
+    return usePreviousMonth
+      ? reelDate.getMonth() === currentMonth - 1
+      : reelDate.getMonth() === currentMonth;
   });
 
   console.log("reelsFilteredByMonth", reelsFilteredByMonth.length);
@@ -23,9 +24,13 @@ const getFilteredReelsByMonth = (reels: any) => {
   return reelsFilteredByMonth;
 };
 
-function getFilteredReels(reels: any, usernames: string[]) {
+function getFilteredReels(
+  reels: any,
+  usernames: string[],
+  usePreviousMonth: boolean
+) {
   console.log("reels before filtered by algo", reels.length);
-  const newReels: any = getFilteredReelsByMonth(reels);
+  const newReels: any = getFilteredReelsByMonth(reels, usePreviousMonth);
   // const newReels: any = reels;
 
   const reelsByOwner: any = {};

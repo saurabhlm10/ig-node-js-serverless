@@ -19,7 +19,7 @@ export const publishMedia = async ({
   console.log("currentPostId", currentPostId);
 
   try {
-    const access_token = getAccessTokenForPage(page);
+    const access_token = await getAccessTokenForPage(page);
     const checkStatusUri = `https://graph.facebook.com/v17.0/${creation_id}?fields=status,status_code&access_token=${access_token}`;
     const isUploaded = await isUploadSuccessful(
       0,

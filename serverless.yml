@@ -24,6 +24,27 @@ custom:
     path: ./.env.${self:provider.stage}
 
 functions:
+  # Callers
+  collectPostsCaller:
+    handler: src/functions/collect-posts-caller.function.handler
+    events:
+      - httpApi:
+          path: /collectPostsCaller
+          method: get
+  uploadMediaContainerCaller:
+    handler: src/functions/upload-media-container-caller.function.handler
+    events:
+      - httpApi:
+          path: /uploadMediaContainerCaller
+          method: get
+  publishPostsCaller:
+    handler: src/functions/publish-post-caller.function.handler
+    events:
+      - httpApi:
+          path: /publishPostsCaller
+          method: get
+
+  # main functions
   uploadMediaContainer:
     handler: src/functions/upload-media-container.handler
     events:

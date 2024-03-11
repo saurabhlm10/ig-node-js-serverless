@@ -23,7 +23,9 @@ export const uploadMedia = async (
   console.log("uploadMedia");
 
   try {
-    const access_token = getAccessTokenForPage(page);
+    const access_token = await getAccessTokenForPage(page);
+
+    console.log("access_token", access_token);
 
     console.log("ig_user_id", ig_user_id);
 

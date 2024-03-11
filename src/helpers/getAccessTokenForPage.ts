@@ -2,9 +2,9 @@ import { axiosInstance } from "../config/axios";
 import { decrypt } from "./decrypt";
 
 export async function getAccessTokenForPage(page: string) {
-  const response = await axiosInstance.get("/secret/", { params: { page } });
+  const response = await axiosInstance.get("/batch/getPageAccessToken/" + page);
 
-  const encrypted_apify_key = response.data.encrypted_apify_key;
+  console.log("response.data", response.data);
 
-  return decrypt(encrypted_apify_key);
+  return response.data.accessToken;
 }

@@ -46,6 +46,10 @@ const cloudinary_cloud_name = process.env.CLOUDINARY_CLOUD_NAME;
 const cloudinary_api_key = process.env.CLOUDINARY_API_KEY;
 const cloudinary_api_secret = process.env.CLOUDINARY_API_SECRET;
 
+const collectPostsUrl = process.env.COLLECT_POSTS_URL;
+const uploadMediaContainerUrl = process.env.UPLOAD_MEDIA_CONTAINER_URL;
+const publishPostUrl = process.env.PUBLISH_POST_URL;
+
 export const ENV = {
   PORT,
   MONGO_URL,
@@ -60,4 +64,7 @@ export const ENV = {
   cloudinary_api_secret,
   cryptoSecret,
   mainBackendUrl,
+  collectPostsUrl,
+  uploadMediaContainerUrl,
+  publishPostUrl,
 };

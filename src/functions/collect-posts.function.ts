@@ -150,7 +150,7 @@ module.exports.handler = async (event: any) => {
       console.error("Error self-invoking Lambda", error);
       return {
         statusCode: 500,
-        body: "Failed to self-invoke Lambda function.",
+        body: JSON.stringify("Failed to self-invoke Lambda function."),
       };
     }
   } catch (error: any) {

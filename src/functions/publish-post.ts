@@ -3,11 +3,12 @@ import { ENV } from "../constants";
 import Post from "../model/Post";
 import { publishMedia } from "../helpers/publishMedia";
 import connectToDb from "../config/db";
-import IGPageModel from "../model/IGPage";
+import IGPageModel, { PageStages } from "../model/IGPage";
 import SecretModel from "../model/Secret.model";
 import { decryptAll } from "../helpers/decrypt";
 import { saveErrorToDB } from "../helpers/saveErrorToDB";
 import mongoose from "mongoose";
+import { shouldUpload } from "../helpers/shouldUpload";
 
 module.exports.handler = async (event: any, context: any) => {
   let currentPost;
@@ -26,6 +27,20 @@ module.exports.handler = async (event: any, context: any) => {
       return {
         statusCode: 404,
         body: JSON.stringify({ message: "Page Not Found" }),
+      };
+    }
+
+    // Check if page is in the right stage
+    const shouldBeUploaded = shouldUpload(
+      validPage.stage as unknown as PageStages
+    );
+
+    if (!shouldBeUploaded) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: "Page is not in the right stage to upload",
+        }),
       };
     }
 

@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import { ENV } from "../constants";
 
 const connectToDb = async () => {
+  if (!ENV.MONGO_URL) throw new Error("MONGO_URL is not defined");
+
   return mongoose
     .connect(ENV.MONGO_URL)
     .then((conn) => {

@@ -51,6 +51,7 @@ const uploadMediaContainerUrl = process.env.UPLOAD_MEDIA_CONTAINER_URL;
 const publishPostUrl = process.env.PUBLISH_POST_URL;
 
 export const ENV = {
+  env,
   PORT,
   MONGO_URL,
   apifyPerUsernameResultLimit,

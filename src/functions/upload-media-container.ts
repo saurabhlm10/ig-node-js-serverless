@@ -2,19 +2,18 @@ import { AxiosError } from "axios";
 import { uploadMedia } from "../helpers/uploadMedia";
 import Post from "../model/Post";
 import connectToDb from "../config/db";
-import IGPageModel from "../model/IGPage";
+import IGPageModel, { PageStages } from "../model/IGPage";
 import { ENV } from "../constants";
 import SecretModel from "../model/Secret.model";
-import { decrypt, decryptAll } from "../helpers/decrypt";
+import { decryptAll } from "../helpers/decrypt";
 import { saveErrorToDB } from "../helpers/saveErrorToDB";
 import mongoose from "mongoose";
+import { shouldUpload } from "../helpers/shouldUpload";
 
 module.exports.handler = async (event: any, context: any) => {
   console.log("uploadMediaContainer");
   let currentPost;
   try {
-    console.log("ENV", ENV);
-
     const page = event.pathParameters?.page;
     console.log("page", page);
 
@@ -30,10 +29,27 @@ module.exports.handler = async (event: any, context: any) => {
     // Check if page is valid
     const validPage = await IGPageModel.findOne({ name: page }).lean();
 
+    console.log(validPage);
+
     if (!validPage) {
       return {
         statusCode: 404,
         body: JSON.stringify({ message: "Page Not Found" }),
+      };
+    }
+
+    // Check if page is in the right stage
+    const shouldBeUploaded =
+      ENV.env === "dev"
+        ? true
+        : shouldUpload(validPage.stage as unknown as PageStages);
+
+    if (!shouldBeUploaded) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: "Page is not in the right stage to upload",
+        }),
       };
     }
 

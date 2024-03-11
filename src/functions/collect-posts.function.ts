@@ -21,9 +21,7 @@ module.exports.handler = async (event: any) => {
   await connectToDb();
 
   const page = event.pathParameters?.page || event.page;
-  const usePreviousMonth = event?.queryStringParameters?.usePreviousMonth
-    ? true
-    : false;
+
   // const page = "frenchiesforthewin";
   console.log("CURRENT PAGE", page);
 
@@ -121,11 +119,7 @@ module.exports.handler = async (event: any) => {
     console.log("Reels from Apify length", reels.length);
 
     // Filter out the reels by the criteria
-    const filteredReels = await getFilteredReels(
-      reels,
-      usernames,
-      usePreviousMonth
-    );
+    const filteredReels = await getFilteredReels(reels, usernames);
 
     console.log("Uploading reels to DB");
 

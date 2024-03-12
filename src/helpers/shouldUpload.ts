@@ -8,7 +8,9 @@ export function shouldUpload(pageStage: PageStages): boolean {
     10
   );
 
-  switch (pageStage) {
+  console.log("pageStage", typeof pageStage);
+
+  switch (Number(pageStage)) {
     case PageStages.One:
       return hourInIST === 18;
     case PageStages.Two:

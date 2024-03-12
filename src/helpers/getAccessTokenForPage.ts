@@ -1,5 +1,4 @@
 import { axiosInstance } from "../config/axios";
-import { ENV } from "../constants";
 
 export async function getAccessTokenForPage(page: string) {
   console.log("getting access token");

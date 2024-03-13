@@ -17,8 +17,8 @@ export const uploadMedia = async (
   cover_url: string,
   caption: string,
   ig_user_id: string,
-  page: string
-  // ownerUsername: string
+  page: string,
+  ownerUsername: string
 ) => {
   console.log("uploadMedia");
 
@@ -36,31 +36,27 @@ export const uploadMedia = async (
 
     console.log("1");
 
-    const tempCaption = removeHashtags(caption);
-    // const tempCaption = `@${ownerUsername}`
+    // const tempCaption = removeHashtags(caption);
+    const tempCaption = `@${ownerUsername}`;
 
     const captionHastags = `
-  
   
   Rate This 1-10 🥰
 
   Tag your Friends!
   
-  Follow @frenchiesforthewin for more
-  Follow @frenchiesforthewin for more
-  Follow @frenchiesforthewin for more
+  Follow @${page} for more
+  Follow @${page} for more
+  Follow @${page} for more
   
   🔊Turn on post notifications
   
   (All rights® are reserved & belong
   to their respective owners)
-  
-  #frenchiesforthewin #frenchievids #frenchievideo #frenchie #frenchbulldog #frenchiedaily #frenchiesofinsta #frenchiefriends #frenchiesofinstagram #frenchielove #frenchieoftheday #frenchiegram #frenchielife #frenchiepuppy #frenchiesociety #frenchiephotos #frenchiebulldog #dogslife
-
   `;
 
     const uriEncodedCaption = urlEncodeString(
-      tempCaption + copyrightDisclaimer + captionHastags
+      tempCaption + captionHastags + copyrightDisclaimer
     );
 
     console.log("2");

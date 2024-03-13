@@ -97,8 +97,8 @@ module.exports.handler = async (event: any, context: any) => {
       currentPost.cover_url,
       currentPost.caption,
       ig_user_id as string,
-      page
-      // currentPost.ownerUsername
+      page,
+      currentPost.ownerUsername
     );
 
     if (!creation_id) {
